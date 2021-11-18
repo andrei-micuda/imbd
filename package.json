@@ -1,0 +1,19 @@
+{
+  "name": "imbd",
+  "version": "1.0.0",
+  "description": "An Imdb copy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "faker": "^5.5.3",
+    "sequelize": "^6.9.0",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.3.0"
+  }
+}
