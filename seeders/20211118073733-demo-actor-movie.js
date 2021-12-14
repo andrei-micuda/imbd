@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -13,20 +13,21 @@ module.exports = {
         const actorId = Math.floor(Math.random() * 100) + 1;
 
         // we don't want to add the same actor twice
-        if (actorsInMovie.indexOf(actorId) === -1) actorsInMovie.push({
-          actorId,
-          movieId: i + 1,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        });
+        if (actorsInMovie.indexOf(actorId) === -1)
+          actorsInMovie.push({
+            actorId,
+            movieId: i + 1,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          });
       }
       actorsMovies.push(...actorsInMovie);
     }
 
-    await queryInterface.bulkInsert('ActorMovies', actorsMovies);
+    await queryInterface.bulkInsert("ActorsMovies", actorsMovies);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('ActorMovies');
-  }
+    await queryInterface.bulkDelete("ActorsMovies");
+  },
 };
