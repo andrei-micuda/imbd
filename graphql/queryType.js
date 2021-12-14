@@ -47,7 +47,7 @@ const queryType = new GraphQLObjectType({
       args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
       },
-      resolve: async (_, { id }) => {
+      resolve: async (_, { id }, context) => {
         const movie = await db.Movie.findByPk(id);
         return movie;
       },
