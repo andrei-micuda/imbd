@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       Movie.belongsToMany(models.Actor, {
         through: "ActorsMovies",
       });
+      Movie.hasMany(models.Review);
     }
   }
   Movie.init(
