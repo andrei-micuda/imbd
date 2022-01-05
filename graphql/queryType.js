@@ -8,6 +8,7 @@ const {
 
 const db = require("../models");
 
+const userType = require("./types/userType");
 const actorType = require("./types/actorType");
 const movieType = require("./types/movieType");
 
@@ -19,6 +20,13 @@ const queryType = new GraphQLObjectType({
       resolve: () => {
         return "Hello World";
       },
+    },
+    profile: {
+      type: userType,
+      resolve: async (source, args, context) => {
+        const user = await db.User.findByPk(context.user.dataValues.id);
+        return user;
+      }
     },
     actors: {
       type: new GraphQLList(actorType),
@@ -68,7 +76,7 @@ const queryType = new GraphQLObjectType({
         });
         return actors;
       },
-    },
+    }
   },
 });
 

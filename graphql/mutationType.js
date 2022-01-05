@@ -1,14 +1,15 @@
 const {
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLList,
-  GraphQLID,
-  GraphQLNonNull,
+  GraphQLInt,
+  GraphQLBoolean,
 } = require("graphql");
 
 const db = require("../models");
 const movieType = require("./types/movieType");
 const createMovieInputType = require("./inputTypes/createMovieInputType");
+const listType = require("./types/listType");
+const createListInputType = require("./inputTypes/createListInputType");
+const addItemToListInputType = require("./inputTypes/addItemToListInputType");
 
 const loginHandler = require("../repository/login");
 const loginInputType = require("./inputTypes/loginInputType");
@@ -62,7 +63,55 @@ const mutationType = new GraphQLObjectType({
         }
       },
     },
-  },
+    createList: {
+      type: listType,
+      args: {
+        createListInput: { type: createListInputType },
+      },
+      resolve: async (source, args, context) => {
+        if (context.user) {
+          const { name } = args.createListInput;
+          const list = await db.List.create({ userId: context.user.dataValues.id, name });
+          return list;
+        } else {
+          return null;
+        }
+      },
+    },
+    deleteList: {
+      type: listType,
+      args: {
+        movieId: { type: GraphQLInt },
+      },
+      resolve: async (source, args, context) => {
+        if (context.user) {
+          const { movieId } = args;
+          console.log(movieId);
+          const list = await db.List.findByPk(movieId);
+          await list.destroy();
+          return list;
+        } else {
+          return null;
+        }
+      },
+    },
+    addItemToList: {
+      type: GraphQLBoolean,
+      args: {
+        addItemToListInput: { type: addItemToListInputType },
+      },
+      resolve: async (source, args, context) => {
+        if (context.user) {
+          const { listId, itemId, itemType } = args.addItemToListInput;
+
+          await db.ListItem.create(args.addItemToListInput);
+          return true;
+        } else {
+          return null;
+        }
+      },
+    },
+  }
 });
 
 module.exports = mutationType;

@@ -2,7 +2,10 @@ const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLID,
+  GraphQLList
 } = require('graphql');
+
+const listType = require("../types/listType");
 
 const userType = new GraphQLObjectType({
   name: 'User',
@@ -19,6 +22,12 @@ const userType = new GraphQLObjectType({
     lastName: {
       type: GraphQLString
     },
+    lists: {
+      type: new GraphQLList(listType),
+      resolve: async (source) => {
+        return source.getLists();
+      }
+    }
   }
 });
 
