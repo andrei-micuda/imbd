@@ -14,10 +14,13 @@
     "express-graphql": "^0.12.0",
     "faker": "^5.5.3",
     "graphql": "^16.1.0",
+    "graphql-subscriptions": "^2.0.0",
+    "graphql-ws": "^5.5.5",
     "jsonwebtoken": "^8.5.1",
     "package.json": "^2.0.1",
     "sequelize": "^6.9.0",
-    "sqlite3": "^4.2.0"
+    "sqlite3": "^4.2.0",
+    "ws": "^8.4.0"
   },
   "devDependencies": {
     "sequelize-cli": "^6.3.0"
