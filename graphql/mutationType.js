@@ -10,6 +10,7 @@ const createMovieInputType = require("./inputTypes/createMovieInputType");
 const listType = require("./types/listType");
 const createListInputType = require("./inputTypes/createListInputType");
 const addItemToListInputType = require("./inputTypes/addItemToListInputType");
+const createTvShowInputType = require("./inputTypes/createTvShowInputType");
 
 const loginHandler = require("../repository/login");
 const loginInputType = require("./inputTypes/loginInputType");
@@ -17,6 +18,8 @@ const loginInputType = require("./inputTypes/loginInputType");
 const loginResultType = require("./types/loginResultType");
 const userType = require("./types/userType");
 const { createUser, updateUser } = require("../repository/users");
+const pubsub = require("../pubsub");
+const tvShowType = require("./types/tvShowType");
 
 const mutationType = new GraphQLObjectType({
   name: "Mutation",
@@ -52,7 +55,42 @@ const mutationType = new GraphQLObjectType({
               const actor = await db.Actor.findByPk(actorsIdList[i]);
               newMovie.addActor(actor);
             }
+            pubsub.publish("movies", {
+              subMovies: {
+                newMovie: newMovie.toJSON(),
+              }
+            });
             return newMovie;
+          } catch (err) {
+            console.error(err);
+            return null;
+          } finally {
+          }
+        } else {
+          return null;
+        }
+      },
+    },
+    createTvShow: {
+      type: tvShowType,
+      args: {
+        createTvShowInput: { type: createTvShowInputType },
+      },
+      resolve: async (source, args, context) => {
+        if (context.user) {
+          const { title, genre, seasons, actorsIdList } = args.createTvShowInput;
+          try {
+            const newShow = await db.TvShow.create({ title, genre, seasons });
+            for (let i = 0; actorsIdList && i < actorsIdList.length; i++) {
+              const actor = await db.Actor.findByPk(actorsIdList[i]);
+              newShow.addActor(actor);
+            }
+            pubsub.publish("shows", {
+              subShows: {
+                newShow: newShow.toJSON(),
+              }
+            });
+            return newShow;
           } catch (err) {
             console.error(err);
             return null;

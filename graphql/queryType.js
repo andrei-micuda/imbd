@@ -21,6 +21,22 @@ const queryType = new GraphQLObjectType({
         return "Hello World";
       },
     },
+    users: {
+      type: new GraphQLList(userType),
+      resolve: async () => {
+        return await db.User.findAll();
+      },
+    },
+    user: {
+      type: userType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve: async (_, { id }) => {
+        const user = await db.User.findByPk(id);
+        return user;
+      },
+    },
     profile: {
       type: userType,
       resolve: async (source, args, context) => {
